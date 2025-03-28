@@ -7,10 +7,22 @@ from data.jobs import Jobs
 from forms.login import LoginForm
 from forms.register import RegisterForm
 from forms.jobs import JobsForm
+from data.departments import Department
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
+@app.route('/departamentsDisplay', methods=['GET', 'POST'])
+@login_required
+def display_departaments():
+    db_sess = db_session.create_session()
+    if current_user.is_authenticated:
+        departaments = db_sess.query(Department).all()
+    else:
+        departaments = []
+    return render_template('departamentsDisplay.html', title='Департаменты',
+                           departaments=departaments
+                           )
 
 @app.route('/jobs', methods=['GET', 'POST'])
 @login_required
